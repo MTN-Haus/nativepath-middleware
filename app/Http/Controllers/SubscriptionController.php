@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Services\Shopify\ShopifyService;
+use GuzzleHttp\Utils;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Throwable;
+
+/**
+ * SubscriptionController class
+ *
+ * @package App\Http\Controllers
+ */
+class SubscriptionController extends Controller
+{
+    public function getToken(Request $request, ShopifyService $shopifyService): JsonResponse
+    {
+        $entityBody = file_get_contents('php://input');
+        $data = Utils::jsonDecode($entityBody, true);
+        $onetimes = $data['onetime'] ?? [];
+        $subscriptions = $data['subscription'] ?? [];
+
+        try {
+            $subscriptionProducts = $shopifyService->getSubscriptionProducts($subscriptions);
+            $defaultProductVariants = $shopifyService->getDefaultProductVariants($subscriptionProducts);
+
+            $items = array_map(function (array $item) {
+                return [
+                    'id' => $item['id'],
+                    'quantity' => $item['qty'],
+                ];
+            }, array_merge($onetimes, $defaultProductVariants));
+
+            return response()->json([
+                'success' => true,
+                'token' => $shopifyService->getCartToken($items),
+            ]);
+        } catch (Throwable $throwable) {
+            return response()->json([
+                'error' => false,
+                'message' => $throwable->getMessage(),
+            ]);
+        }
+    }
+}
