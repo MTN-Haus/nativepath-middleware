@@ -96,7 +96,7 @@ class ShopifyService
             foreach ($subscriptionVariants as $subscriptionVariant) {
                 $variantId = filter_var(($subscriptionVariant['id'] ?? ''), FILTER_SANITIZE_NUMBER_INT);
                 $productId = $subscriptionVariant['product']['metafields']['nodes'][0]['value'] ?? null;
-                if ($variantId && $productId && $variantId === ($subscription['id'] ?? null)) {
+                if ($variantId && $productId && $variantId === strval($subscription['id'] ?? null)) {
                     $items[] = [
                         'id' => $variantId,
                         'qty' => $subscription['qty'] ?? 0,
@@ -132,7 +132,7 @@ class ShopifyService
                     ($subscriptionVariant['variants']['nodes'][0]['id'] ?? ''),
                     FILTER_SANITIZE_NUMBER_INT
                 );
-                if ($productId && $variantId && $productId === ($subscriptionProduct['product_id'] ?? null)) {
+                if ($productId && $variantId && $productId === strval($subscriptionProduct['product_id'] ?? null)) {
                     $items[] = [
                         'id' => $variantId,
                         'qty' => $subscriptionProduct['qty'] ?? 0,
