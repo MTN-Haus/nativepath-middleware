@@ -39,7 +39,7 @@ class SubscriptionController extends Controller
             ]);
         } catch (Throwable $throwable) {
             return response()->json([
-                'error' => false,
+                'error' => true,
                 'message' => $throwable->getMessage(),
             ]);
         }
