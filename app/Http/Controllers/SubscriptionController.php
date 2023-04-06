@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Shopify\ShopifyService;
+use Exception;
 use GuzzleHttp\Utils;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -32,6 +33,10 @@ class SubscriptionController extends Controller
                     'quantity' => $item['qty'],
                 ];
             }, array_merge($onetimes, $defaultProductVariants));
+
+            if (!$items) {
+                throw new Exception('List products is empty!');
+            }
 
             return response()->json([
                 'success' => true,
