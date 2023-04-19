@@ -101,6 +101,7 @@ class ShopifyService
                         'id' => $variantId,
                         'qty' => $subscription['qty'] ?? 0,
                         'product_id' => $productId,
+                        'properties' => $subscription['properties'] ?? [],
                     ];
                 }
             }
@@ -136,6 +137,7 @@ class ShopifyService
                     $items[] = [
                         'id' => $variantId,
                         'qty' => $subscriptionProduct['qty'] ?? 0,
+                        'properties' => $subscriptionProduct['properties'] ?? [],
                     ];
                 }
             }
