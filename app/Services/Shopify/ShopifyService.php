@@ -134,10 +134,12 @@ class ShopifyService
                     FILTER_SANITIZE_NUMBER_INT
                 );
                 if ($productId && $variantId && $productId === strval($subscriptionProduct['product_id'] ?? null)) {
+                    $properties = $subscriptionProduct['properties'] ?? [];
+                    $properties['shipping_interval_frequency'] ??= 30;
                     $items[] = [
                         'id' => $variantId,
                         'qty' => $subscriptionProduct['qty'] ?? 0,
-                        'properties' => $subscriptionProduct['properties'] ?? [],
+                        'properties' => $properties,
                     ];
                 }
             }

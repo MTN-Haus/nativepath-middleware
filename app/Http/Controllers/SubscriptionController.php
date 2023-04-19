@@ -28,10 +28,15 @@ class SubscriptionController extends Controller
             $defaultProductVariants = $shopifyService->getDefaultProductVariants($subscriptionProducts);
 
             $items = array_map(function (array $item) {
-                return [
+                $newItem = [
                     'id' => $item['id'],
                     'quantity' => $item['qty'],
                 ];
+                if (isset($item['properties'])) {
+                    $newItem['properties'] = $item['properties'];
+                }
+
+                return $newItem;
             }, array_merge($onetimes, $defaultProductVariants));
 
             if (!$items) {
